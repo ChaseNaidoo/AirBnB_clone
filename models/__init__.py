@@ -1,2 +1,2 @@
-def __init__(self, *args, **kwargs):
-    
+#!/usr/bin/python3
+"""Package Initialization"""
