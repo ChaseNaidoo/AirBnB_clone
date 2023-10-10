@@ -1,13 +1,7 @@
 #!/usr/bin/python3
-""" The fileStorage class"""
+"""The FileStorage class"""
 import json
 from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.place import Place
-from models.amenity import Amenity
-from models.review import Review
 
 
 class FileStorage:
@@ -20,21 +14,24 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
+    def __init__(self):
+        """Constructor to initialize FileStorage instance."""
+        self.__class__.__file_path = FileStorage.__file_path
+
     def all(self):
-        """ returns the dictionary __objects"""
+        """returns the dictionary __objects"""
         return FileStorage.__objects
 
     def new(self, obj):
         """Set in __objects obj the key <obj_classs_name>.id"""
         ocname = obj.__class__.__name__
-        Filestorage.__object["{}.{}".format(ocname, obj.id)] = obj
+        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
-        odict = FileStorage.__objects
-        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        objdict = {key: obj.to_dict() for key, obj in FileStorage.__objects.items()}
         with open(FileStorage.__file_path, "w") as f:
-            json.dump(objdict, f)
+            json.dump(objdict, f)                    
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
