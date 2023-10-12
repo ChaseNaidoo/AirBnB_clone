@@ -3,6 +3,13 @@
 import cmd
 import shlex
 from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -13,7 +20,13 @@ class HBNBCommand(cmd.Cmd):
     def __init__(self):
         super().__init__()
         self.l_classes = {
-            'BaseModel': BaseModel
+            'BaseModel': BaseModel,
+            'User': User,
+            'State': State,
+            'City': City,
+            'Amenity': Amenity,
+            'Place': Place,
+            'Review': Review
         }
 
     def lookup_instance(self, args):
@@ -36,6 +49,14 @@ class HBNBCommand(cmd.Cmd):
         """Shows string representation of an instance passed"""
         try:
             args = arg.split()
+            if len(args) == 0:
+                raise ValueError("** class name missing **")
+            class_name = args[0]
+            if class_name not in self.l_classes:
+                raise ValueError("** class doesn't exist **")
+            if len(args) < 2:
+                raise ValueError("** instance id missing **")
+            instance_id = args[1].strip('"')
             instance = self.lookup_instance(args)
             print(instance)
         except ValueError as e:
@@ -132,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_quit(self, line):
-        """Quit command to exit the command interpreter"""
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, line):
