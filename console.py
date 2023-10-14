@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """The command interpreter"""
 import cmd
+import sys
 import shlex
 from models.base_model import BaseModel
 from models.user import User
@@ -14,6 +15,7 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """Command processor"""
+    intro = "(hnbnb) "
     prompt = "(hbnb) "
 
     def __init__(self):
@@ -27,6 +29,16 @@ class HBNBCommand(cmd.Cmd):
             'Place': Place,
             'Review': Review
         }
+
+    def preloop(self):
+        """Disables raw input to handle non-interactive input"""
+        if not sys.stdin.isatty():
+            self.use_rawinput = False
+        
+    def postloop(self):
+        """Cleanup or actions needed after the command loop has completed."""
+        if not sys.stdin.isatty():
+            print()
 
     def lookup_instance(self, args):
         """Find and return an instance based on class name and ID"""
