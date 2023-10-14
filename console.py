@@ -23,14 +23,21 @@ class HBNBCommand(cmd.Cmd):
         'City': City,
         'Amenity': Amenity,
         'Place': Place,
-        'Review': Review
+        'Review': Review,
+        'count': None
     }
 
     def default(self, line):
-        """Handle unknown commands, including <class name>.all()"""
+        """Handle unknown commands:
+        <class name>.all()
+        <class name>.count()
+        """
         if line.endswith(".all()"):
             class_name = line[:-6]
             self.do_all(class_name)
+        elif line.endswith(".count()"):
+            class_name = line[:-7]
+            self.do_count(class_name)
         else:
             print(f"*** Unknown command: {line} ***")
 
@@ -153,6 +160,23 @@ class HBNBCommand(cmd.Cmd):
                     storage.save()
                     return
                 raise ValueError("** no instance found **")
+        except ValueError as e:
+            print(e)
+
+    def do_count(self, arg):
+        """Prints the count of instances of a given class using <class name>.count()"""
+        try:
+            if not arg:
+                raise ValueError("** class name missing **")
+
+            class_name = arg.split('.')[0]
+
+            if class_name not in self.l_classes:
+                raise ValueError(f"** class {class_name} doesn't exist **")
+
+            objects = storage.all()
+            count = len([obj for obj in objects.values() if isinstance(obj, self.l_classes[class_name])])
+            print(count)
         except ValueError as e:
             print(e)
 
