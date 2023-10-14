@@ -29,6 +29,7 @@ class HBNBCommand(cmd.Cmd):
         }
 
     def lookup_instance(self, args):
+        """Find and return an instance based on class name and ID"""
         if len(args) < 2:
             raise ValueError("** class name missing **")
 
@@ -133,8 +134,8 @@ class HBNBCommand(cmd.Cmd):
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == args[1].strip('"') and
-                isinstance(obj, self.l_classes[args[0]]):
+                if obj.id == args[1].strip('"') and isinstance(obj,
+                                                               self.l_classes[args[0]]):
                     if len(args) == 2:
                         raise ValueError("** attribute name missing **")
                     elif len(args) == 3:
