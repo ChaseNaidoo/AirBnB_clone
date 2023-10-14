@@ -26,6 +26,14 @@ class HBNBCommand(cmd.Cmd):
         'Review': Review
     }
 
+    def default(self, line):
+        """Handle unknown commands, including <class name>.all()"""
+        if line.endswith(".all()"):
+            class_name = line[:-6]
+            self.do_all(class_name)
+        else:
+            print(f"*** Unknown command: {line} ***")
+
     def lookup_instance(self, args):
         """Find and return an instance based on class name and ID."""
         if len(args) < 2:
@@ -101,12 +109,14 @@ class HBNBCommand(cmd.Cmd):
                 raise ValueError("** class name missing **")
 
             args = arg.split()
-            if args[0] not in self.l_classes:
+            class_name = args[0]
+
+            if class_name not in self.l_classes:
                 raise ValueError("** class doesn't exist **")
 
             objects = storage.all()
             instances = [str(obj) for obj in objects.values()
-                         if isinstance(obj, self.l_classes[args[0]])]
+                         if isinstance(obj, self.l_classes[class_name])]
             print(instances)
         except ValueError as e:
             print(e)
