@@ -14,7 +14,6 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """Command processor"""
-
     prompt = "(hbnb) "
 
     def __init__(self):
@@ -107,13 +106,16 @@ class HBNBCommand(cmd.Cmd):
                 raise ValueError("** class doesn't exist **")
 
             objects = storage.all()
-            instances = [str(obj) for obj in objects.values() if isinstance(obj, self.l_classes[args[0]])]
+            instances = [str(obj) for obj in objects.values()
+                         if isinstance(obj, self.l_classes[args[0]])]
             print(instances)
         except ValueError as e:
             print(e)
 
     def do_update(self, arg):
-        """Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file)"""
+        """Updates an instance based on the class name and
+        id by adding or updating attribute (save the change into the JSON file)
+        """
         try:
             if not arg:
                 raise ValueError("** class name missing **")
@@ -131,7 +133,8 @@ class HBNBCommand(cmd.Cmd):
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == args[1].strip('"') and isinstance(obj, self.l_classes[args[0]]):
+                if obj.id == args[1].strip('"') and
+                isinstance(obj, self.l_classes[args[0]]):
                     if len(args) == 2:
                         raise ValueError("** attribute name missing **")
                     elif len(args) == 3:
@@ -153,7 +156,7 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_quit(self, line):
-        """Quit command to exit the program"""
+        """Quit command to exit the command interpreter"""
         return True
 
     def do_EOF(self, line):
