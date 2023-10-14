@@ -15,6 +15,7 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """Command processor"""
+    cmd.Cmd.completekey = None
     prompt = "(hbnb) "
 
     def __init__(self):
