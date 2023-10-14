@@ -15,7 +15,6 @@ from models import storage
 
 class HBNBCommand(cmd.Cmd):
     """Command processor"""
-    intro = "(hnbnb) "
     prompt = "(hbnb) "
 
     def __init__(self):
