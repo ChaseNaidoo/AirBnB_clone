@@ -165,8 +165,8 @@ class HBNBCommand(cmd.Cmd):
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == args[1].strip('"')
-                and isinstance(obj, self.l_classes[args[0]]):
+                if obj.id == args[1].strip('"') and isinstance(
+                        obj, self.l_classes[args[0]]):
                     if len(args) == 2:
                         raise ValueError("** attribute name missing **")
                     elif len(args) == 3:
