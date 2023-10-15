@@ -32,6 +32,7 @@ class HBNBCommand(cmd.Cmd):
         <class name>.all()
         <class name>.count()
         <class name>.show(<id>)
+        <class name>.destroy(<id>)
         """
         if line.endswith(".all()"):
             class_name = line[:-6]
@@ -43,6 +44,10 @@ class HBNBCommand(cmd.Cmd):
             class_name, id_part = line.split(".show(")
             instance_id = id_part.strip(')"')
             self.do_show(f"{class_name} {instance_id}")
+        elif line.startswith("User.destroy(\"") and line.endswith('")'):
+            class_name, id_part = line.split(".destroy(\"")
+            instance_id = id_part.strip('")')
+            self.do_destroy(f"{class_name} {instance_id}")
         else:
             print(f"*** Unknown command: {line} ***")
 
@@ -90,11 +95,12 @@ class HBNBCommand(cmd.Cmd):
                 if obj is instance:
                     key_to_delete = key
                     break
-                if key_to_delete:
-                    del storage.all()[key_to_delete]
-                    storage.save()
-                else:
-                    raise ValueError("** no instance found **")
+                
+            if key_to_delete:
+                del storage.all()[key_to_delete]
+                storage.save()
+            else:
+                raise ValueError("** no instance found **")
         except ValueError as e:
             print(e)
 
