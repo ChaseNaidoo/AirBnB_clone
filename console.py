@@ -34,6 +34,7 @@ class HBNBCommand(cmd.Cmd):
         <class name>.show(<id>)
         <class name>.destroy(<id>)
         <class name>.update(<id>, <attribute name>, <attribute value>)
+        <class name>.update(<id>, <dictionary representation>)
         """
         if line.endswith(".all()"):
             class_name = line[:-6]
