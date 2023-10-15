@@ -31,6 +31,7 @@ class HBNBCommand(cmd.Cmd):
         """Handle unknown commands:
         <class name>.all()
         <class name>.count()
+        <class name>.show(<id>)
         """
         if line.endswith(".all()"):
             class_name = line[:-6]
@@ -38,6 +39,10 @@ class HBNBCommand(cmd.Cmd):
         elif line.endswith(".count()"):
             class_name = line[:-7]
             self.do_count(class_name)
+        elif line.startswith("User.show(") and line.endswith('")'):
+            class_name, id_part = line.split(".show(")
+            instance_id = id_part.strip(')"')
+            self.do_show(f"{class_name} {instance_id}")
         else:
             print(f"*** Unknown command: {line} ***")
 
