@@ -33,6 +33,7 @@ class HBNBCommand(cmd.Cmd):
         <class name>.count()
         <class name>.show(<id>)
         <class name>.destroy(<id>)
+        <class name>.update(<id>, <attribute name>, <attribute value>)
         """
         if line.endswith(".all()"):
             class_name = line[:-6]
@@ -48,6 +49,8 @@ class HBNBCommand(cmd.Cmd):
             class_name, id_part = line.split(".destroy(\"")
             instance_id = id_part.strip('")')
             self.do_destroy(f"{class_name} {instance_id}")
+        elif line.startswith("User.update(") and line.endswith(')'):
+            self.do_update(line)
         else:
             print(f"*** Unknown command: {line} ***")
 
@@ -144,33 +147,30 @@ class HBNBCommand(cmd.Cmd):
         updating attribute (save the change into the JSON file).
         """
         try:
-            if not arg:
-                raise ValueError("** class name missing **")
+            args = shlex.split(arg)
+            if len(args) < 4:
+                raise ValueError("** Usage: <class name>.update(<id>, <attribute name>, <attribute value>) **")
 
-            a = ""
-            for argv in arg.split(','):
-                a = a + argv
+            class_name = args[0]
+            instance_id = args[1].strip('"')
 
-            args = shlex.split(a)
-
-            if args[0] not in self.l_classes:
-                raise ValueError("** class doesn't exist **")
-            if len(args) == 1:
-                raise ValueError("** instance id missing **")
+            if class_name not in self.l_classes:
+                raise ValueError(f"** class {class_name} doesn't exist **")
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == args[1].strip('"') and isinstance(obj,
-                                                               self.l_classes[args[0]]):
-                    if len(args) == 2:
-                        raise ValueError("** attribute name missing **")
-                    elif len(args) == 3:
-                        raise ValueError("** value missing **")
+                if obj.id == instance_id and isinstance(obj, self.l_classes[class_name]):
+                    attribute_name = args[2]
+                    attribute_value = args[3]
 
-                    setattr(obj, args[2], args[3])
-                    storage.save()
-                    return
-                raise ValueError("** no instance found **")
+                    if hasattr(obj, attribute_name):
+                        setattr(obj, attribute_name, attribute_value)
+                        storage.save()
+                        return
+                    else:
+                        raise ValueError(f"** no attribute '{attribute_name}' found **")
+
+            raise ValueError("** no instance found **")
         except ValueError as e:
             print(e)
 
