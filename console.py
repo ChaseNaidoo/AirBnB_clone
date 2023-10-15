@@ -11,6 +11,7 @@ from models.place import Place
 from models.review import Review
 from models import storage
 
+
 class HBNBCommand(cmd.Cmd):
     """Command processor"""
 
@@ -31,6 +32,10 @@ class HBNBCommand(cmd.Cmd):
         """Handle unknown commands:
         <class name>.all()
         <class name>.count()
+        <class name>.show(<id>)
+        <class name>.destroy(<id>)
+        <class name>.update(<id>, <attribute name>, <attribute value>)
+        <class name>.update(<id>, <dictionary representation>)
         """
         if line.endswith(".all()"):
             class_name = line[:-6]
@@ -38,6 +43,16 @@ class HBNBCommand(cmd.Cmd):
         elif line.endswith(".count()"):
             class_name = line[:-7]
             self.do_count(class_name)
+        elif line.startswith("User.show(") and line.endswith('")'):
+            class_name, id_part = line.split(".show(")
+            instance_id = id_part.strip(')"')
+            self.do_show(f"{class_name} {instance_id}")
+        elif line.startswith("User.destroy(\"") and line.endswith('")'):
+            class_name, id_part = line.split(".destroy(\"")
+            instance_id = id_part.strip('")')
+            self.do_destroy(f"{class_name} {instance_id}")
+        elif line.startswith("User.update(") and line.endswith(')'):
+            self.do_update(line)
         else:
             print(f"*** Unknown command: {line} ***")
 
@@ -85,11 +100,12 @@ class HBNBCommand(cmd.Cmd):
                 if obj is instance:
                     key_to_delete = key
                     break
-                if key_to_delete:
-                    del storage.all()[key_to_delete]
-                    storage.save()
-                else:
-                    raise ValueError("** no instance found **")
+
+            if key_to_delete:
+                del storage.all()[key_to_delete]
+                storage.save()
+            else:
+                raise ValueError("** no instance found **")
         except ValueError as e:
             print(e)
 
@@ -149,8 +165,8 @@ class HBNBCommand(cmd.Cmd):
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == args[1].strip('"') and isinstance(obj,
-                                                               self.l_classes[args[0]]):
+                if obj.id == args[1].strip('"') and isinstance(
+                        obj, self.l_classes[args[0]]):
                     if len(args) == 2:
                         raise ValueError("** attribute name missing **")
                     elif len(args) == 3:
@@ -159,12 +175,14 @@ class HBNBCommand(cmd.Cmd):
                     setattr(obj, args[2], args[3])
                     storage.save()
                     return
-                raise ValueError("** no instance found **")
+            raise ValueError("** no instance found **")
         except ValueError as e:
             print(e)
 
     def do_count(self, arg):
-        """Prints the count of instances of a given class using <class name>.count()"""
+        """Prints the count of instances of a given class
+        using <class name>.count()
+        """
         try:
             if not arg:
                 raise ValueError("** class name missing **")
@@ -175,7 +193,8 @@ class HBNBCommand(cmd.Cmd):
                 raise ValueError(f"** class {class_name} doesn't exist **")
 
             objects = storage.all()
-            count = len([obj for obj in objects.values() if isinstance(obj, self.l_classes[class_name])])
+            count = len([obj for obj in objects.values()
+                         if isinstance(obj, self.l_classes[class_name])])
             print(count)
         except ValueError as e:
             print(e)
@@ -196,6 +215,6 @@ class HBNBCommand(cmd.Cmd):
         """EOF command to exit the command interpreter."""
         return True
 
-    
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
