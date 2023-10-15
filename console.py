@@ -147,29 +147,32 @@ class HBNBCommand(cmd.Cmd):
         updating attribute (save the change into the JSON file).
         """
         try:
-            args = shlex.split(arg)
-            if len(args) < 4:
-                raise ValueError("** Usage: <class name>.update(<id>, <attribute name>, <attribute value>) **")
+            if not arg:
+                raise ValueError("** class name missing **")
 
-            class_name = args[0]
-            instance_id = args[1].strip('"')
+            a = ""
+            for argv in arg.split(','):
+                a = a + argv
 
-            if class_name not in self.l_classes:
-                raise ValueError(f"** class {class_name} doesn't exist **")
+            args = shlex.split(a)
+            
+            if args[0] not in self.l_classes:
+                raise ValueError("** class doesn't exist **")
+            if len(args) == 1:
+                raise ValueError("** instance id missing **")
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == instance_id and isinstance(obj, self.l_classes[class_name]):
-                    attribute_name = args[2]
-                    attribute_value = args[3]
+                if obj.id == args[1].strip('"') and isinstance(obj,
+                                                               self.l_classes[args[0]]):
+                    if len(args) == 2:
+                        raise ValueError("** attribute name missing **")
+                    elif len(args) == 3:
+                        raise ValueError("** value missing **")
 
-                    if hasattr(obj, attribute_name):
-                        setattr(obj, attribute_name, attribute_value)
-                        storage.save()
-                        return
-                    else:
-                        raise ValueError(f"** no attribute '{attribute_name}' found **")
-
+                    setattr(obj, args[2], args[3])
+                    storage.save()
+                    return
             raise ValueError("** no instance found **")
         except ValueError as e:
             print(e)
