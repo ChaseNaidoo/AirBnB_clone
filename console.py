@@ -11,6 +11,7 @@ from models.place import Place
 from models.review import Review
 from models import storage
 
+
 class HBNBCommand(cmd.Cmd):
     """Command processor"""
 
@@ -99,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
                 if obj is instance:
                     key_to_delete = key
                     break
-                
+
             if key_to_delete:
                 del storage.all()[key_to_delete]
                 storage.save()
@@ -156,7 +157,7 @@ class HBNBCommand(cmd.Cmd):
                 a = a + argv
 
             args = shlex.split(a)
-            
+
             if args[0] not in self.l_classes:
                 raise ValueError("** class doesn't exist **")
             if len(args) == 1:
@@ -164,8 +165,8 @@ class HBNBCommand(cmd.Cmd):
 
             objects = storage.all()
             for obj in objects.values():
-                if obj.id == args[1].strip('"') and isinstance(obj,
-                                                               self.l_classes[args[0]]):
+                if obj.id == args[1].strip('"')
+                and isinstance(obj, self.l_classes[args[0]]):
                     if len(args) == 2:
                         raise ValueError("** attribute name missing **")
                     elif len(args) == 3:
@@ -179,7 +180,9 @@ class HBNBCommand(cmd.Cmd):
             print(e)
 
     def do_count(self, arg):
-        """Prints the count of instances of a given class using <class name>.count()"""
+        """Prints the count of instances of a given class
+        using <class name>.count()
+        """
         try:
             if not arg:
                 raise ValueError("** class name missing **")
@@ -190,7 +193,8 @@ class HBNBCommand(cmd.Cmd):
                 raise ValueError(f"** class {class_name} doesn't exist **")
 
             objects = storage.all()
-            count = len([obj for obj in objects.values() if isinstance(obj, self.l_classes[class_name])])
+            count = len([obj for obj in objects.values()
+                         if isinstance(obj, self.l_classes[class_name])])
             print(count)
         except ValueError as e:
             print(e)
@@ -211,6 +215,6 @@ class HBNBCommand(cmd.Cmd):
         """EOF command to exit the command interpreter."""
         return True
 
-    
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
