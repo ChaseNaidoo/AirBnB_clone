@@ -4,6 +4,10 @@
     width: 100%;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
+    align-items: center;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
 }
 
 section.filters button {
@@ -15,6 +19,7 @@ section.filters button {
     border-radius: 4px;
     margin-right: 30px;
     opacity: 100%;
+    font-size: 18px;
 }
 
 section.filters button:hover {
