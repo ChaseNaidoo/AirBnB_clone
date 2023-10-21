@@ -6,6 +6,8 @@ header {
 }
 
 .logo {
-    background: url("images/logo.png") center no-repeat;
+    background: url("../images/logo.png") center no-repeat;
     padding-left: 20px;
+    width: 142px;
+    height: 60px;
 }
