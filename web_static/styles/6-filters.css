@@ -70,7 +70,7 @@ section.filters button:hover {
 
 .popover li h2 {
     padding-top: 0;
-    margin-bottom: 5%;
+    margin-bottom: 0;
 }
 
 .popover_dropdown {
