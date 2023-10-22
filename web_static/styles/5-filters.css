@@ -6,8 +6,6 @@
     border-radius: 4px;
     align-items: center;
     text-align: right;
-    display: flex;
-    justify-content: flex-end;
 }
 
 section.filters button {
