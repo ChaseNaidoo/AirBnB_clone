@@ -15,11 +15,12 @@
 }
 
 .places article {
-    widht: 390px;
+    width: 390px;
     padding: 20px;
     margin: 20px;
     border: #FF5A5F 1px solid;
     border-radius: 4px;
+    text-align: center;
 }
 
 .articles {
@@ -32,4 +33,5 @@
 .article h2 {
     font-size: 30px;
     margin-top: -2px;
+    text-align: center;
 }
